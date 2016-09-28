@@ -9,7 +9,6 @@ var time = function(origins, destinations, mode){
     distance.mode(mode);
     distance.matrix(origins, destinations, function (err, distances) {
         if (!err){
-            console.log("First walk distance: ");
             console.log(distances.rows[0].elements);
             reqTime = distances.rows[0].elements[0].duration.value;
             resolve(reqTime);

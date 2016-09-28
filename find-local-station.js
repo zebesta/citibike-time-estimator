@@ -2,6 +2,14 @@ var stations = require('./stations.json')
 
 var findLocalStation = function (latLng) {
   localStations = stations.stationBeanList.filter(filterByProximity);
+  function filterByProximity(obj) {
+    var roughFourthMile = 400; //rough estimate of .5 miles in meters
+    if (measure(obj.latitude, obj.longitude, latLng.latitude, latLng.longitude ) < roughFourthMile) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   function measure(lat1, lon1, lat2, lon2){  // generally used geo measurement function
       var R = 6378.137; // Radius of earth in KM
       var dLat = (lat2 - lat1) * Math.PI / 180;
@@ -13,19 +21,6 @@ var findLocalStation = function (latLng) {
       var d = R * c;
       return d * 1000; // meters
   }
-  function filterByProximity(obj) {
-    var roughFourthMile = 400; //rough estimate of .5 miles in meters
-    if (measure(obj.latitude, obj.longitude, latLng.latitude, latLng.longitude ) < roughFourthMile) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  var set = {}
-
-  for (var i = 0; i < localStations.size; i++) {
-    set[numbers[i]] = true;
-  }
   localStations.sort(function (a, b) {
     if (measure(a.latitude, a.longitude, latLng.latitude, latLng.longitude) > measure(b.latitude, b.longitude, latLng.latitude, latLng.longitude)) {
       return 1;
@@ -33,10 +28,11 @@ var findLocalStation = function (latLng) {
     if (measure(a.latitude, a.longitude, latLng.latitude, latLng.longitude) < measure(b.latitude, b.longitude, latLng.latitude, latLng.longitude)) {
       return -1;
     }
-    // a must be equal to b
     return 0;
   });
 
+//TODO could test here to ensure that the local station selected has atleast 1 or more bikes currently at it,
+//requires that stations json is no longer static, need real time data
   var localStation = localStations[0];
   return localStation;
 }

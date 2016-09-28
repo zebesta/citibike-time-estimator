@@ -1,37 +1,69 @@
 //currently loading stations from static JSON from citibike: https://feeds.citibikenyc.com/stations/stations.json
-var stations = require('./stations.json')
+// var stations = require('./stations.json')
+
+//libraries --------
+//google distance
 var distance = require('google-distance-matrix');
+distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
+//geocoder
+var NodeGeocoder = require('node-geocoder');
+var geocoder = NodeGeocoder(options);
+var options = {
+  provider: 'google',
+  // Optional depending on the providers
+  httpAdapter: 'https', // Default
+  apiKey: 'AIzaSyAJJZJo61vnfuTVO4fpbfcfcxYqubLsA-4', // for Mapquest, OpenCage, Google Premier
+  formatter: null         // 'gpx', 'string', ...
+};
+
+//local modules
 var time = require('./time')
 var findLocalStation = require('./find-local-station')
-distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
 
 // var origins = ['70 Maujer, Brooklyn'];
-var origins = ['40.710277, -73.9499667'];
+// var origins = ['40.710277, -73.9499667'];
+var g1 = geocoder.geocode('70 Maujer, Brooklyn')
+  .then(function(res) {
+    console.log("geocoder");
+    var geocodedLL = {
+      "latitude":res[0].latitude,
+      "longitude":res[0].longitude
+    };
+    console.log(geocodedLL);
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
+
+
 var originLatLng = {
   "latitude":40.710277,
   "longitude":-73.947778
 };
+var origins = ['' + originLatLng.latitude + ', ' + originLatLng.longitude];
 
 // var destinations = ['455 Broadway, New York'];
-var destinations = ['40.7207656, -74.0032934'];
+// var destinations = ['40.7207656, -74.0032934'];
 var destinationLatLng = {
   "latitude": 40.7207656,
   "longitude": -74.0032934
 };
+var destinations = ['' + destinationLatLng.latitude + ', ' + destinationLatLng.longitude];
 
-var leonardStId = 3079;
-var howardStId = 268;
-var totalTime = 0;
 
-var leonardStation = stations.stationBeanList.filter(function( obj ) {
-  return obj.id == leonardStId;
-});
-var leonardStationLocation = [''+leonardStation[0].latitude + ', '+ leonardStation[0].longitude];
-
-var howardStation = stations.stationBeanList.filter(function( obj ) {
-  return obj.id == howardStId;
-});
-var howardStationLocation = [''+howardStation[0].latitude + ', '+ howardStation[0].longitude];
+// var leonardStId = 3079;
+// var howardStId = 268;
+// var totalTime = 0;
+//
+// var leonardStation = stations.stationBeanList.filter(function( obj ) {
+//   return obj.id == leonardStId;
+// });
+// var leonardStationLocation = [''+leonardStation[0].latitude + ', '+ leonardStation[0].longitude];
+//
+// var howardStation = stations.stationBeanList.filter(function( obj ) {
+//   return obj.id == howardStId;
+// });
+// var howardStationLocation = [''+howardStation[0].latitude + ', '+ howardStation[0].longitude];
 
 var originLocalStation  = findLocalStation(originLatLng);
 var destinationLocalStation = findLocalStation(destinationLatLng);
@@ -49,6 +81,7 @@ Promise.all(timePromises)
   .then(results=>{
     var totalTime = results.reduce((a,b)=>{return a+b}, 0);
     console.log(totalTime);
+    console.log("Total commute time is: " + Math.floor(totalTime/60) + " minutes and " + totalTime%60 + " seconds ");
   })
   .catch(errs =>{
     console.log("ERROR!!!");
