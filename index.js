@@ -1,6 +1,3 @@
-/**
- *  Retrieves JSON data for stations, helmets, and bikes.
- */
 //currently loading stations from static JSON from citibike: https://feeds.citibikenyc.com/stations/stations.json
 var stations = require('./stations.json')
 var distance = require('google-distance-matrix');
@@ -16,9 +13,6 @@ var leonardStId = 3079;
 var howardStId = 268;
 var totalTime = 0;
 
-
-// console.log(citibike);
-// console.log(stations);
 var leonardStation = stations.stationBeanList.filter(function( obj ) {
   return obj.id == leonardStId;
 });
@@ -29,16 +23,14 @@ var howardStation = stations.stationBeanList.filter(function( obj ) {
 });
 var howardStationLocation = [''+howardStation[0].latitude + ', '+ howardStation[0].longitude];
 
-//walk from home to leonard
-var p1 = time(origins, leonardStationLocation, 'walking');
+//array of promises
+var timePromises = [
+  time(origins, leonardStationLocation, 'walking'), //walk from home to leonard
+  time(leonardStationLocation, howardStationLocation, 'bicycling'), //bike from leonard to howard
+  time(howardStationLocation, destinations, 'walking') //walk from howard to recurse
+]
 
-//bike from leonard to howard
-var p2 = time(leonardStationLocation, howardStationLocation, 'bicycling');
-
-//walk from howard to recurse
-var p3 = time(howardStationLocation, destinations, 'walking');
-
-Promise.all([p1,p2,p3])
+Promise.all(timePromises)
   .then(results=>{
     var totalTime = results.reduce((a,b)=>{return a+b}, 0);
     console.log(totalTime);
