@@ -4,6 +4,7 @@
 //currently loading stations from static JSON from citibike: https://feeds.citibikenyc.com/stations/stations.json
 var stations = require('./stations.json')
 var distance = require('google-distance-matrix');
+var time = require('./time')
 distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
 
 var origins = ['70 Maujer, Brooklyn'];
@@ -11,6 +12,7 @@ var leonardStId = 3079;
 var howardStId = 268;
 var destinations = ['455 Broadway, New York'];
 var totalTime = 0;
+
 
 // console.log(citibike);
 // console.log(stations);
@@ -24,29 +26,67 @@ var howardStation = stations.stationBeanList.filter(function( obj ) {
 });
 var howardStationLocation = [''+howardStation[0].latitude + ', '+ howardStation[0].longitude];
 
-distance.mode('walking');
-distance.matrix(origins, leonardStationLocation, function (err, distances) {
-    if (!err)
-        console.log("Firat walk distance: ");
-        console.log(distances.rows[0].elements);
-        totalTime += distances.rows[0].elements[0].duration.value;
-})
+//walk from home to leonard
+time(origins, leonardStationLocation, 'walking')
+  .then(result => {
+    totalTime += result;
+    console.log("Promise 1 was resolved!");
+    console.log(totalTime)
+  })
+  .catch(err =>{
+    console.log(err);
+  });
 
-distance.mode('bicycling');
-distance.matrix(leonardStationLocation, howardStationLocation, function (err, distances) {
-    if (!err)
-        console.log("First bike distance: ")
-        console.log(distances.rows[0].elements);
-        totalTime += distances.rows[0].elements[0].duration.value;
-})
+//bike from leonard to howard
+time(leonardStationLocation, howardStationLocation, 'bicycling')
+  .then(result => {
+    totalTime += result;
+    console.log("Promise 2 was resolved!");
+    console.log(totalTime)
+  })
+  .catch(err =>{
+    console.log(err);
+  });
 
-distance.mode('walking');
-distance.matrix(howardStationLocation, destinations, function (err, distances) {
-    if (!err)
-        console.log("Second bike distance: ")
-        console.log(distances.rows[0].elements);
-        totalTime += distances.rows[0].elements[0].duration.value;
-        console.log("Total time is " + Math.floor(totalTime/60) + " minutes and " +  totalTime%60 + " seconds");
-})
+//walk from howard to recurse center
+time(leonardStationLocation, howardStationLocation, 'walking')
+  .then(result => {
+    totalTime += result;
+    console.log("Promise 3 was resolved!");
+    console.log(totalTime)
+  })
+  .catch(err =>{
+    console.log(err);
+  });
+
+// time(leonardStationLocation, howardStationLocation, 'walking');
+
+
+// distance.mode('walking');
+// distance.matrix(origins, leonardStationLocation, function (err, distances) {
+//     if (!err)
+//         console.log("First walk distance: ");
+//         console.log(distances.rows[0].elements);
+//         totalTime += distances.rows[0].elements[0].duration.value;
+// })
+//
+// distance.mode('bicycling');
+// distance.matrix(leonardStationLocation, howardStationLocation, function (err, distances) {
+//     if (!err)
+//         console.log("First bike distance: ")
+//         console.log(distances.rows[0].elements);
+//         totalTime += distances.rows[0].elements[0].duration.value;
+// })
+//
+// distance.mode('walking');
+// distance.matrix(howardStationLocation, destinations, function (err, distances) {
+//     if (!err)
+//         console.log("Second bike distance: ")
+//         console.log(distances.rows[0].elements);
+//         totalTime += distances.rows[0].elements[0].duration.value;
+//         console.log("Total time is " + Math.floor(totalTime/60) + " minutes and " +  totalTime%60 + " seconds");
+// })
+
+
 
 // console.log(leonardStation);
