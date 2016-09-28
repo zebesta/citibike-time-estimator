@@ -7,10 +7,13 @@ var distance = require('google-distance-matrix');
 var time = require('./time')
 distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
 
-var origins = ['70 Maujer, Brooklyn'];
+// var origins = ['70 Maujer, Brooklyn'];
+var origins = ['40.710277, -73.9499667'];
+// var destinations = ['455 Broadway, New York'];
+var destinations = ['40.7207656, -74.0032934'];
+
 var leonardStId = 3079;
 var howardStId = 268;
-var destinations = ['455 Broadway, New York'];
 var totalTime = 0;
 
 
@@ -27,34 +30,19 @@ var howardStation = stations.stationBeanList.filter(function( obj ) {
 var howardStationLocation = [''+howardStation[0].latitude + ', '+ howardStation[0].longitude];
 
 //walk from home to leonard
-time(origins, leonardStationLocation, 'walking')
-  .then(result => {
-    totalTime += result;
-    console.log("Promise 1 was resolved!");
-    console.log(totalTime)
-  })
-  .catch(err =>{
-    console.log(err);
-  });
+var p1 = time(origins, leonardStationLocation, 'walking');
 
 //bike from leonard to howard
-time(leonardStationLocation, howardStationLocation, 'bicycling')
-  .then(result => {
-    totalTime += result;
-    console.log("Promise 2 was resolved!");
-    console.log(totalTime)
-  })
-  .catch(err =>{
-    console.log(err);
-  });
+var p2 = time(leonardStationLocation, howardStationLocation, 'bicycling');
 
-//walk from howard to recurse center
-time(leonardStationLocation, howardStationLocation, 'walking')
-  .then(result => {
-    totalTime += result;
-    console.log("Promise 3 was resolved!");
-    console.log(totalTime)
+//walk from howard to recurse
+var p3 = time(howardStationLocation, destinations, 'walking');
+
+Promise.all([p1,p2,p3])
+  .then(results=>{
+    var totalTime = results.reduce((a,b)=>{return a+b}, 0);
+    console.log(totalTime);
   })
-  .catch(err =>{
-    console.log(err);
+  .catch(errs =>{
+    console.log("ERROR!!!");
   });
