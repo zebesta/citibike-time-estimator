@@ -8,18 +8,8 @@ var calculate = function(start, end){
   console.log("inside calculate distance matrices!")
   console.log(start);
   console.log(end);
-  // var originLatLng = {
-  //   "latitude":40.710277,
-  //   "longitude":-73.947778
-  // };
+  //convert to the way google wants it
   var origins = ['' + start.lat + ', ' + start.lng];
-
-  // var destinations = ['455 Broadway, New York'];
-  // var destinations = ['40.7207656, -74.0032934'];
-  // var destinationLatLng = {
-  //   "latitude": 40.7207656,
-  //   "longitude": -74.0032934
-  // };
   var destinations = ['' + end.lat + ', ' + end.lng];
 
 
@@ -50,8 +40,8 @@ var calculate = function(start, end){
     return timeString;
   };
 
-
-  //promises for other modes of transit
+//-----------------------------------------
+//promises for other modes of transit
   time(origins, destinations, 'driving')
     .then(result=>{
       var driveTime = result;
@@ -80,6 +70,8 @@ var calculate = function(start, end){
     .catch(errs => {
       console.log("ERROR!");
     });
+    
+    //'transit' requires different key?!
 
 }
 

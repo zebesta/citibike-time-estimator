@@ -1,7 +1,7 @@
 var distance = require('google-distance-matrix');
-var Promise = require('promise');
-
 distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
+
+var Promise = require('promise');
 
 var time = function(origins, destinations, mode){
   return new Promise(function(resolve, reject){
