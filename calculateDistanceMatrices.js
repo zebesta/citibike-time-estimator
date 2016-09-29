@@ -5,9 +5,9 @@ var Promise = require('promise');
 
 
 var calculate = function(start, end){
-  console.log("inside calculate distance matrices!")
-  console.log(start);
-  console.log(end);
+  // console.log("inside calculate distance matrices!")
+  // console.log(start);
+  // console.log(end);
   //convert to the way google wants it
   var origins = ['' + start.lat + ', ' + start.lng];
   var destinations = ['' + end.lat + ', ' + end.lng];
@@ -70,7 +70,7 @@ var calculate = function(start, end){
     .catch(errs => {
       console.log("ERROR!");
     });
-    
+
     //'transit' requires different key?!
 
 }
