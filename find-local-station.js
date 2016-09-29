@@ -4,7 +4,7 @@ var findLocalStation = function (latLng) {
   localStations = stations.stationBeanList.filter(filterByProximity);
   function filterByProximity(obj) {
     var roughFourthMile = 400; //rough estimate of .5 miles in meters
-    if (measure(obj.latitude, obj.longitude, latLng.latitude, latLng.longitude ) < roughFourthMile) {
+    if (measure(obj.latitude, obj.longitude, latLng.lat, latLng.lng ) < roughFourthMile) {
       return true;
     } else {
       return false;
@@ -22,10 +22,10 @@ var findLocalStation = function (latLng) {
       return d * 1000; // meters
   }
   localStations.sort(function (a, b) {
-    if (measure(a.latitude, a.longitude, latLng.latitude, latLng.longitude) > measure(b.latitude, b.longitude, latLng.latitude, latLng.longitude)) {
+    if (measure(a.latitude, a.longitude, latLng.lat, latLng.lng) > measure(b.latitude, b.longitude, latLng.lat, latLng.lng)) {
       return 1;
     }
-    if (measure(a.latitude, a.longitude, latLng.latitude, latLng.longitude) < measure(b.latitude, b.longitude, latLng.latitude, latLng.longitude)) {
+    if (measure(a.latitude, a.longitude, latLng.lat, latLng.lng) < measure(b.latitude, b.longitude, latLng.lat, latLng.lng)) {
       return -1;
     }
     return 0;
