@@ -17,23 +17,26 @@ var options = {
 };
 
 //local modules
-var time = require('./time')
-var findLocalStation = require('./find-local-station')
+var time = require('./time');
+// var geo = require('./geocodeAddresses');
+var findLocalStation = require('./find-local-station');
+
+// geo();
 
 // var origins = ['70 Maujer, Brooklyn'];
 // var origins = ['40.710277, -73.9499667'];
-var g1 = geocoder.geocode('70 Maujer, Brooklyn')
-  .then(function(res) {
-    console.log("geocoder");
-    var geocodedLL = {
-      "latitude":res[0].latitude,
-      "longitude":res[0].longitude
-    };
-    console.log(geocodedLL);
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+// var g1 = geocoder.geocode('70 Maujer, Brooklyn')
+//   .then(function(res) {
+//     // console.log("geocoder");
+//     var geocodedLL = {
+//       "latitude":res[0].latitude,
+//       "longitude":res[0].longitude
+//     };
+//     console.log(geocodedLL);
+//   })
+//   .catch(function(err) {
+//     console.log(err);
+//   });
 
 
 var originLatLng = {
@@ -70,19 +73,58 @@ var destinationLocalStation = findLocalStation(destinationLatLng);
 var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
 var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
 
-//array of promises
-var timePromises = [
+//array of promises for citibiking
+var citibikeTimePromises = [
   time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
   time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
   time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
 ]
 
-Promise.all(timePromises)
+Promise.all(citibikeTimePromises)
   .then(results=>{
     var totalTime = results.reduce((a,b)=>{return a+b}, 0);
-    console.log(totalTime);
-    console.log("Total commute time is: " + Math.floor(totalTime/60) + " minutes and " + totalTime%60 + " seconds ");
+    // console.log(totalTime);
+    console.log("Citibiking:")
+    console.log(formatTime(totalTime));
   })
   .catch(errs =>{
     console.log("ERROR!!!");
   });
+
+function formatTime(time){
+  var timeString = "Total time is: " + Math.floor(time/60) + " minutes and " + time%60 + " seconds ";
+  return timeString;
+};
+
+
+//promises for other modes of transit
+time(origins, destinations, 'driving')
+  .then(result=>{
+    var driveTime = result;
+    console.log("Driving:");
+    console.log(formatTime(driveTime));
+  })
+  .catch(errs => {
+    console.log("ERROR!");
+  });
+
+time(origins, destinations, 'walking')
+  .then(result=>{
+    var driveTime = result;
+    console.log("Walking:");
+    console.log(formatTime(driveTime));
+  })
+  .catch(errs => {
+    console.log("ERROR!");
+  });
+
+// Transit requires a premium key maybe (?)
+// time(origins, destinations, 'transit')
+//   .then(result=>{
+//     var driveTime = result;
+//     console.log("Transit:");
+//     console.log(formatTime(driveTime));
+//   })
+//   .catch(errs => {
+//     console.log("ERROR!");
+//   });
