@@ -3,15 +3,22 @@ var googleMapsClient = require('@google/maps').createClient({
 });
 
 
-var geocode = function(){
+var geocode = function(addString){
   // Geocode an address.
-  googleMapsClient.geocode({
-    address: '1600 Amphitheatre Parkway, Mountain View, CA'
-  }, function(err, response) {
-    if (!err) {
-      console.log(response.json.results);
-    }
-  });
+  return new Promise(function(resolve, reject){
+    googleMapsClient.geocode({
+      address: addString
+    }, function(err, response) {
+      if (!err) {
+        // console.log(response.json.results[0].geometry.location);
+        //return the lat and long
+        resolve(response.json.results[0].geometry.location);
+      }else{
+        reject(err);
+      }
+    });
+
+  })
 
 }
 

@@ -6,22 +6,29 @@
 var distance = require('google-distance-matrix');
 distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
 //geocoder
-var NodeGeocoder = require('node-geocoder');
-var geocoder = NodeGeocoder(options);
-var options = {
-  provider: 'google',
-  // Optional depending on the providers
-  httpAdapter: 'https', // Default
-  apiKey: 'AIzaSyAJJZJo61vnfuTVO4fpbfcfcxYqubLsA-4', // for Mapquest, OpenCage, Google Premier
-  formatter: null         // 'gpx', 'string', ...
-};
+// var NodeGeocoder = require('node-geocoder');
+// var geocoder = NodeGeocoder(options);
+// var options = {
+//   provider: 'google',
+//   // Optional depending on the providers
+//   httpAdapter: 'https', // Default
+//   apiKey: 'AIzaSyAJJZJo61vnfuTVO4fpbfcfcxYqubLsA-4', // for Mapquest, OpenCage, Google Premier
+//   formatter: null         // 'gpx', 'string', ...
+// };
 
 //local modules
 var time = require('./time');
-// var geo = require('./geocodeAddresses');
+var geo = require('./geocodeAddresses');
 var findLocalStation = require('./find-local-station');
 
-// geo();
+var address = geo('70 Maujer, Brooklyn')
+  .then(result=>{
+    // var geoReturn = result[0];
+    console.log(result)
+  })
+  .catch(errs =>{
+    console.log("ERROR!!!");
+  });
 
 // var origins = ['70 Maujer, Brooklyn'];
 // var origins = ['40.710277, -73.9499667'];
