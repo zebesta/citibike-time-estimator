@@ -13,15 +13,15 @@ askForAddresses();
 function askForAddresses(){
   var start;
   var end;
-  var question1 = function(){
+  var askStartAddress = function(){
     rl.question('What is your starting address? ', (answer1) => {
       // TODO: Log the answer in a database
       console.log('You entered:', answer1);
       start = answer1;
-      question2();
+      askEndAddress();
     });
   }();
-  var question2 = function(){
+  var askEndAddress = function(){
     rl.question('What is your ending address? ', (answer2) => {
       // TODO: Log the answer in a database
       console.log('You entered:', answer2);
