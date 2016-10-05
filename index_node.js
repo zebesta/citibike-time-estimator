@@ -1,4 +1,15 @@
 var geo = require('./geocodeAddresses');
+var geo_node = require('node-geocoder');
+var options = {
+  provider: 'google',
+
+  // Optional depending on the providers
+  httpAdapter: 'https', // Default
+  apiKey: 'AIzaSyAmZZ8iz90_r4sZW55eSlikFbwYl8q5VgU', // for Mapquest, OpenCage, Google Premier
+  formatter: null         // 'gpx', 'string', ...
+};
+
+var geocoder = geo_node(options);
 var calculate = require('./calculateDistanceMatrices')
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -47,4 +58,22 @@ function initialize (start, end){
       console.log("ERROR!!!");
     });
 
+}
+function initialize_node (start, end){
+  geocoder.geocode(start)
+    .then(function(res){
+      console.log(res);
+    })
+    .catch(dunction(err){
+      console.log(err);
+    });
+  // var locationPromises = [geocoder(start), geocoder(end)]
+  // //convert entered addresses to usable data and print address to user
+  // Promise.all(locationPromises)
+  //   .then(results=>{
+  //     consle.log(results);
+  //   })
+  //   .catch(errs =>{
+  //     console.log("ERROR!!!");
+  //   });
 }
