@@ -1,4 +1,6 @@
 var geo_node = require('node-geocoder');
+var testing = require('./testing');
+
 var options = {
   provider: 'google',
 
@@ -9,16 +11,7 @@ var options = {
 };
 
 var geocoder = geo_node(options);
-
 function initialize_node (start, end){
-  // geocoder.geocode(start)
-  //   .then(function(res){
-  //     console.log(res);
-  //   })
-  //   .catch(function(err){
-  //     console.log(err);
-  //   });
-
   var locationPromises = [geocoder.geocode(start), geocoder.geocode(end)];
   //convert entered addresses to usable data and print address to user
   Promise.all(locationPromises)
