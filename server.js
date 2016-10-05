@@ -10,6 +10,9 @@ app.get('/', function(req, res) {
 app.get('/index.js', function(req, res) {
     res.sendFile('index.js', {root: __dirname })
 });
+app.get('/index_node.js', function(req, res) {
+    res.sendFile('index_node.js', {root: __dirname })
+});
 app.get('/testing.js', function(req, res) {
     res.sendFile('testing.js', {root: __dirname })
 });
