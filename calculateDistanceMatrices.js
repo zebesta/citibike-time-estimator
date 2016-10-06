@@ -36,6 +36,7 @@ var calculate = function(start, end){
         // var responseString = ("Citibiking" + formatTime(totalTime));
         // resolve(responseString);
         var responseObject = {
+          totaltime: "TOTAL: " + formatTime(totalTime),
           walk1: "First walk: " + formatTime(results[0]),
           station1: originLocalStation.stationName,
           bike1: "Bike: " + formatTime(results[1]),
@@ -52,7 +53,7 @@ var calculate = function(start, end){
       });
 
     function formatTime(time){
-      var timeString = "Total time is: " + Math.floor(time/60) + " minutes and " + time%60 + " seconds ";
+      var timeString = "Total time is " + Math.floor(time/60) + " minutes and " + time%60 + " seconds ";
       return timeString;
     };
 
