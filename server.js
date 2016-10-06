@@ -41,6 +41,7 @@ app.get('/start/:start_address/end/:end_address', function(req,res) {
         var toReturn = {
           start: results[0].json.results[0].formatted_address,
           end: results[1].json.results[0].formatted_address,
+          //need to google format this or somehting
           startLatLng: results[0].json.results[0].geometry.location,
           endLatLng: results[1].json.results[0].geometry.location
         }
@@ -62,11 +63,19 @@ app.get('/start/:start_address/end/:end_address', function(req,res) {
 
 });
 app.get('/calc/startll/:startll/endll/:endll', function(req,res){
-  var startLatLng = req.params.startll;
-  var endLatLng = req.params.endll;
+  var startLatLng = JSON.parse(req.params.startll);
+  var endLatLng = JSON.parse(req.params.endll);
   console.log(startLatLng);
   console.log(endLatLng);
-  // var returnedPromise = calculate(startLatLng, endLatLng);
+  calculate(startLatLng, endLatLng)
+    .then(result=>{
+      console.log(result);
+      res.json(result);
+    })
+    .catch(err=>{
+      console.log(err);
+      res.json(err);
+    });
 });
 
 app.listen(3000, function () {

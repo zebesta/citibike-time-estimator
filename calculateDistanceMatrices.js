@@ -8,13 +8,14 @@ var calculate = function(start, end){
   return new Promise(function(resolve, reject){
     var origins = ['' + start.lat + ', ' + start.lng];
     var destinations = ['' + end.lat + ', ' + end.lng];
+    console.log("origins: " + origins);
 
 
     var originLocalStation  = findLocalStation(start);
     var destinationLocalStation = findLocalStation(end);
     var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
     var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
-
+    console.log("Google formatted: " + originLocalStationGoogleFormat);
     //array of promises for citibiking
     var citibikeTimePromises = [
       time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
@@ -23,6 +24,11 @@ var calculate = function(start, end){
     ]
     Promise.all(citibikeTimePromises)
       .then(results=>{
+        // var responseString = "";
+        //TODO: hacky solution
+        // responseString += "Walk from start point: " + formatTime;
+
+        //TODO: previous solution:::
         var totalTime = results.reduce((a,b)=>{return a+b}, 0);
         // console.log(totalTime);
         console.log("Citibiking:")
@@ -32,7 +38,8 @@ var calculate = function(start, end){
       })
       .catch(errs =>{
         console.log("ERROR!!!");
-        reject("Errorororororor!");
+        // reject("Errorororororor!");
+        reject(errs);
       });
 
     function formatTime(time){
@@ -45,36 +52,36 @@ var calculate = function(start, end){
   // console.log(start);
   // console.log(end);
   //convert to the way google wants it
-  var origins = ['' + start.lat + ', ' + start.lng];
-  var destinations = ['' + end.lat + ', ' + end.lng];
-
-
-  var originLocalStation  = findLocalStation(start);
-  var destinationLocalStation = findLocalStation(end);
-  var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
-  var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
-
-  //array of promises for citibiking
-  var citibikeTimePromises = [
-    time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
-    time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
-    time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
-  ]
-  Promise.all(citibikeTimePromises)
-    .then(results=>{
-      var totalTime = results.reduce((a,b)=>{return a+b}, 0);
-      // console.log(totalTime);
-      console.log("Citibiking:")
-      console.log(formatTime(totalTime));
-    })
-    .catch(errs =>{
-      console.log("ERROR!!!");
-    });
-
-  function formatTime(time){
-    var timeString = "Total time is: " + Math.floor(time/60) + " minutes and " + time%60 + " seconds ";
-    return timeString;
-  };
+  // var origins = ['' + start.lat + ', ' + start.lng];
+  // var destinations = ['' + end.lat + ', ' + end.lng];
+  //
+  //
+  // var originLocalStation  = findLocalStation(start);
+  // var destinationLocalStation = findLocalStation(end);
+  // var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
+  // var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
+  //
+  // //array of promises for citibiking
+  // var citibikeTimePromises = [
+  //   time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
+  //   time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
+  //   time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
+  // ]
+  // Promise.all(citibikeTimePromises)
+  //   .then(results=>{
+  //     var totalTime = results.reduce((a,b)=>{return a+b}, 0);
+  //     // console.log(totalTime);
+  //     console.log("Citibiking:")
+  //     console.log(formatTime(totalTime));
+  //   })
+  //   .catch(errs =>{
+  //     console.log("ERROR!!!");
+  //   });
+  //
+  // function formatTime(time){
+  //   var timeString = "Total time is: " + Math.floor(time/60) + " minutes and " + time%60 + " seconds ";
+  //   return timeString;
+  // };
 
 // //-----------------------------------------
 // //promises for other modes of transit
