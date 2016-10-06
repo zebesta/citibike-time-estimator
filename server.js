@@ -1,5 +1,6 @@
 var express = require('express');
 var geo = require('./geocodeAddresses');
+var calculate = require('./calculateDistanceMatrices');
 
 var app = express();
 
@@ -21,8 +22,8 @@ app.get('/helloworld', function(req,res) {
   }
   res.json(hello);
 });
-app.get('/address/:address_string/end/:end_address', function(req,res) {
-  var start = req.params.address_string;
+app.get('/start/:start_address/end/:end_address', function(req,res) {
+  var start = req.params.start_address;
   var end = req.params.end_address;
   console.log("Trying to get directions starting: " + start);
   console.log("Trying to get directions ending: " + end);
@@ -35,12 +36,18 @@ app.get('/address/:address_string/end/:end_address', function(req,res) {
         console.log("start location is: "+results[0].json.results[0].formatted_address);
         var endLatLng = results[1].json.results[0].geometry.location;
         console.log("end location is: "+results[1].json.results[0].formatted_address);
-        calculate(startLatLng, endLatLng);
+        // calculate(startLatLng, endLatLng);
         console.log("Resolving the JSON in the promises!")
-        res.json(results[0]);
+        var toReturn = {
+          start: results[0].json.results[0].formatted_address,
+          end: results[1].json.results[0].formatted_address,
+          startLatLng: results[0].json.results[0].geometry.location,
+          endLatLng: results[1].json.results[0].geometry.location
+        }
+        res.json(toReturn);
       })
       .catch(errs =>{
-        console.log("Resolving the JSON in the promises!")
+        console.log(" Error while resolving the JSON in the promises!")
 
         console.log("ERROR!!!");
         res.json(errs[0]);
@@ -53,6 +60,13 @@ app.get('/address/:address_string/end/:end_address', function(req,res) {
   // }
   // res.json(response);
 
+});
+app.get('/calc/startll/:startll/endll/:endll', function(req,res){
+  var startLatLng = req.params.startll;
+  var endLatLng = req.params.endll;
+  console.log(startLatLng);
+  console.log(endLatLng);
+  // var returnedPromise = calculate(startLatLng, endLatLng);
 });
 
 app.listen(3000, function () {
