@@ -21,62 +21,21 @@ var calculate = function(start, end){
     //array of promises for citibiking
     var citibikeTimePromises = [
       //TODO these promises need to return more details objects instead of the number of seconds
+      time(origins, destinations, 'walking'),
+      time(origins, destinations, 'bicycling'),
+      time(origins, destinations, 'driving'),
       time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
       time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
       time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
     ]
     Promise.all(citibikeTimePromises)
       .then(results=>{
-        // var responseString = "";
-        //TODO: hacky solution
-        // responseString += "Walk from start point: " + formatTime;
 
-        //TODO: previous solution:::
-        // var totalTime = results.reduce((a,b)=>{return a+b}, 0);
-        var totalTime = 0;
-        // console.log(totalTime);
-        console.log("Citibiking:")
-        console.log(formatTime(totalTime));
-        // var responseString = ("Citibiking" + formatTime(totalTime));
-        // resolve(responseString);
-        for(let r of results){
-          totalTime += r.time;
-        }
-        var travelCardObject = {
-          type: "walking",
-          time: results[0],
-          timeString: formatTime(results[0]),
-          startLoc: "70 Maujer",
-          startLocLat: start.lat,
-          startLocLng: start.lng,
-          endLoc: originLocalStation.stationName,
-          endLocLat: originLocalStation.latitude,
-          endLocLng: originLocalStation.longitude
-        }
-
-        var travelCardObject1 = travelCardObject
-        travelCardObject1.type = "biking";
-        travelCardObject1.time = results[1];
-        travelCardObject1.timeString = formatTime(results[1]);
-        // console.log("Travel card object 1");
-        // console.log(travelCardObject1);
-        var travelCardObject2 = travelCardObject;
-        travelCardObject2.type = "walking";
-        travelCardObject2.time = results[2];
-        travelCardObject2.timeString = formatTime(results[2]);
 
         var responseObject = results;
         console.log("Response object!:");
         console.log(responseObject);
-        // var responseObject = {
-        //   totaltime: "TOTAL: " + formatTime(totalTime),
-        //   walk1: "First walk: " + formatTime(results[0]),
-        //   station1: originLocalStation.stationName,
-        //   bike1: "Bike: " + formatTime(results[1]),
-        //   walk2: "Final walk: " + formatTime(results[2]),
-        //   station2: destinationLocalStation.stationName,
-        //   worded: "Total commute time is " + formatTime(totalTime)
-        // }
+
         resolve(responseObject)
       })
       .catch(errs =>{

@@ -22,10 +22,10 @@ var time = function(origins, destinations, mode){
               mode,
               distances.rows[0].elements[0].duration.value,
               formatTime(distances.rows[0].elements[0].duration.value),
-              distances.destination_addresses[0],
+              distances.origin_addresses[0],
               70,
               40,
-              distances.origin_addresses[0],
+              distances.destination_addresses[0],
               70,
               40
             )
