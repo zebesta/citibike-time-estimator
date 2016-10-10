@@ -22,6 +22,8 @@ app.get('/helloworld', function(req,res) {
   }
   res.json(hello);
 });
+
+//Get a geocoded version of the starting and ending addresses
 app.get('/start/:start_address/end/:end_address', function(req,res) {
   var start = req.params.start_address;
   var end = req.params.end_address;
@@ -62,6 +64,8 @@ app.get('/start/:start_address/end/:end_address', function(req,res) {
   // res.json(response);
 
 });
+
+//Get the time and method requirements for the geocoded data being sent
 app.get('/calc/startll/:startll/endll/:endll', function(req,res){
   var startLatLng = JSON.parse(req.params.startll);
   var endLatLng = JSON.parse(req.params.endll);

@@ -1,5 +1,6 @@
 var time = require('./time');
 var findLocalStation = require('./find-local-station');
+var Travelcard = require ('./travelcard').Travelcard
 
 var Promise = require('promise');
 
@@ -13,11 +14,13 @@ var calculate = function(start, end){
 
     var originLocalStation  = findLocalStation(start);
     var destinationLocalStation = findLocalStation(end);
+
     var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
     var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
     console.log("Google formatted: " + originLocalStationGoogleFormat);
     //array of promises for citibiking
     var citibikeTimePromises = [
+      //TODO these promises need to return more details objects instead of the number of seconds
       time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
       time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
       time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
@@ -29,12 +32,16 @@ var calculate = function(start, end){
         // responseString += "Walk from start point: " + formatTime;
 
         //TODO: previous solution:::
-        var totalTime = results.reduce((a,b)=>{return a+b}, 0);
+        // var totalTime = results.reduce((a,b)=>{return a+b}, 0);
+        var totalTime = 0;
         // console.log(totalTime);
         console.log("Citibiking:")
         console.log(formatTime(totalTime));
         // var responseString = ("Citibiking" + formatTime(totalTime));
         // resolve(responseString);
+        for(let r of results){
+          totalTime += r.time;
+        }
         var travelCardObject = {
           type: "walking",
           time: results[0],
@@ -46,7 +53,21 @@ var calculate = function(start, end){
           endLocLat: originLocalStation.latitude,
           endLocLng: originLocalStation.longitude
         }
-        var responseObject = [travelCardObject, travelCardObject, travelCardObject];
+
+        var travelCardObject1 = travelCardObject
+        travelCardObject1.type = "biking";
+        travelCardObject1.time = results[1];
+        travelCardObject1.timeString = formatTime(results[1]);
+        // console.log("Travel card object 1");
+        // console.log(travelCardObject1);
+        var travelCardObject2 = travelCardObject;
+        travelCardObject2.type = "walking";
+        travelCardObject2.time = results[2];
+        travelCardObject2.timeString = formatTime(results[2]);
+
+        var responseObject = results;
+        console.log("Response object!:");
+        console.log(responseObject);
         // var responseObject = {
         //   totaltime: "TOTAL: " + formatTime(totalTime),
         //   walk1: "First walk: " + formatTime(results[0]),
