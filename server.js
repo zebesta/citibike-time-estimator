@@ -2,6 +2,7 @@ var express = require('express');
 var geo = require('./geocodeAddresses');
 var calculate = require('./calculateDistanceMatrices');
 var cors = require('cors')
+var Promise = require('promise');
 
 var app = express();
 
