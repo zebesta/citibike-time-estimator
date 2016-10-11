@@ -97,7 +97,7 @@ app.get('/calc/startll/:startll/endll/:endll', function(req,res){
 // app.listen(3000, function () {
 //   console.log('Example app listening on port 3000!');
 // });
-//Start the server
+//Start the server  ---- working with Heroku!
 var port = process.env.PORT || 3000;        //set port
 app.listen(port);
 console.log('Magic happens on port ' + port);
