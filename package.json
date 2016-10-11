@@ -4,20 +4,21 @@
   "description": "A test app for the node citibike package",
   "main": "server.js",
   "engines": {
-      "node": "6.5.0",
-      "npm": "3.10.3"
-    },
+    "node": "6.5.0",
+    "npm": "3.10.3"
+  },
   "author": "Chris Sebesta",
   "license": "ISC",
   "dependencies": {
+    "@google/maps": "^0.2.1",
     "citibike": "^2.3.1",
-    "google-distance-matrix": "^0.0.3",
-    "express": "~4.0.0",
-    "cors": "2.8.1"
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "google-distance-matrix": "^0.0.3"
   },
   "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "devDependencies": {},
   "repository": {
