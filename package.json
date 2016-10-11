@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A test app for the node citibike package",
   "main": "server.js",
+  "engines": {
+      "node": "6.5.0",
+      "npm": "3.10.3"
+    },
   "author": "Chris Sebesta",
   "license": "ISC",
   "dependencies": {
