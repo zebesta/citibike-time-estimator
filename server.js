@@ -3,6 +3,7 @@ var geo = require('./geocodeAddresses');
 var calculate = require('./calculateDistanceMatrices');
 var cors = require('cors')
 var Promise = require('promise');
+var bodyParser = require('body-parser');
 
 var app = express();
 
@@ -11,7 +12,11 @@ var app = express();
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
+// app.use(cors());
 app.use(cors());
+//app.options('*', cors()); // include before other routes
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // app.get('/', function (req, res) {
 //   res.send('Hello World!');
@@ -89,6 +94,10 @@ app.get('/calc/startll/:startll/endll/:endll', function(req,res){
     });
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
+// app.listen(3000, function () {
+//   console.log('Example app listening on port 3000!');
+// });
+//Start the server
+var port = process.env.PORT || 3000;        //set port
+app.listen(port);
+console.log('Magic happens on port ' + port);
