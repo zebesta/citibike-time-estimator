@@ -16,7 +16,11 @@ app.use(cors());
 //   res.send('Hello World!');
 // });
 app.get('/', function(req, res) {
-    res.sendFile('home.html', {root: __dirname })
+  var hello = {
+    hi: 'Hello World'
+  }
+  res.json(hello);
+    // res.sendFile('home.html', {root: __dirname })
 });
 app.get('/helloworld', function(req,res) {
   var hello = {
