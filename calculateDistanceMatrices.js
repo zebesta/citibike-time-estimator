@@ -8,27 +8,27 @@ var Promise = require('promise');
 
 var calculate = function(start, end){
   return new Promise(function(resolve, reject){
-    var origins = ['' + start.lat + ', ' + start.lng];
-    var destinations = ['' + end.lat + ', ' + end.lng];
-    console.log("origins: " + origins);
+    // var origins = ['' + start.lat + ', ' + start.lng];
+    // var destinations = ['' + end.lat + ', ' + end.lng];
+    // console.log("origins: " + origins);
 
 
     var originLocalStation  = findLocalStation(start);
     var destinationLocalStation = findLocalStation(end);
 
-    var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
-    var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
-    console.log("Google formatted: " + originLocalStationGoogleFormat);
+    // var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
+    // var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
+    // console.log("Google formatted: " + originLocalStationGoogleFormat);
     //array of promises for citibiking
     // var allTimePromises = [];
     // var citibikeTransMethods = new Transmethod("Citibiking")
 
     var citibikeTimePromises = [
       //TODO these promises need to return more details objects instead of the number of seconds
-      time(origins, destinations, 'walking'),
-      time(origins, destinations, 'bicycling'),
-      time(origins, destinations, 'driving'),
-      citibikeTime(origins, originLocalStationGoogleFormat, destinations, destinationLocalStationGoogleFormat, 'citibiking')
+      time(start, end, 'walking'),
+      time(start, end, 'bicycling'),
+      time(start, end, 'driving'),
+      citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking')
       // time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
       // time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
       // time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse

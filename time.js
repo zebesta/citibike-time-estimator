@@ -10,15 +10,21 @@ distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
 var Promise = require('promise');
 
 //returns a transmethod object with one tavel card in the array
-var time = function(origins, destinations, mode){
+var time = function(start, end, mode){
   var stringMode = mode;
   return new Promise(function(resolve, reject){
     var reqTime = 0;
     distance.mode(mode);
+    var origins = ['' + start.lat + ', ' + start.lng];
+    var destinations = ['' + end.lat + ', ' + end.lng];
     distance.matrix(origins, destinations, function (err, distances) {
         if (!err){
             // console.log(distances.rows[0].elements);
             console.log("Distances!:");
+            console.log(distances);
+            console.log("Origins!:")
+            console.log(origins);
+            console.log("Distances!:")
             console.log(distances);
             //constructor(type, time, timeString, startLoc, startLocLat, startLocLng, endLoc, endLocLat, endLocLng)
             var timeResponse = new Travelcard(
@@ -26,11 +32,11 @@ var time = function(origins, destinations, mode){
               distances.rows[0].elements[0].duration.value,
               formatTime(distances.rows[0].elements[0].duration.value),
               distances.origin_addresses[0],
-              70,
-              40,
+              start.lat,
+              start.lng,
               distances.destination_addresses[0],
-              70,
-              40
+              end.lat,
+              end.lng
             );
             var tm = new Transmethod(stringMode, [timeResponse]);
             console.log("PRINTING TM!!!");
@@ -44,58 +50,61 @@ var time = function(origins, destinations, mode){
 }
 
 //returns a transmethod object with 3 travel cards in the array, walking, biking, and walking
-var citibikeTime = function(origins, originStation, destinations, destinationStation, mode){
+var citibikeTime = function(start, originLocalStation, end, destinationLocalStation, mode){
+  var origins = ['' + start.lat + ', ' + start.lng];
+  var destinations = ['' + end.lat + ', ' + end.lng];
+  console.log("Origin local station: " + originLocalStation);
+  var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
+  var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
   stringMode = mode;
   return new Promise(function(resolve, reject){
     var reqTime = 0;
-    // distance.mode(mode);
-    var walk1 = distance;
-    var bike = distance;
-    var walk2 = distance;
-    walk1.mode('walking');
-    walk1.matrix(origins, originStation, function(err, distances){
+
+    //TODO: Make this recursive with a variable for the mode of transil being attached to the distance calls
+    distance.mode('walking');
+    distance.matrix(origins, originLocalStationGoogleFormat, function(err, distances){
       if (!err){
           var timeResponse = new Travelcard(
             'walking',
             distances.rows[0].elements[0].duration.value,
             formatTime(distances.rows[0].elements[0].duration.value),
             distances.origin_addresses[0],
-            70,
-            40,
+            start.lat,
+            start.lng,
             distances.destination_addresses[0],
-            70,
-            40
+            originLocalStation.latitude,
+            originLocalStation.longitude
           )
           var tm = new Transmethod(stringMode, [timeResponse]);
-          bike.mode('bicycling');
-          bike.matrix(originStation, destinationStation, function(err, distances){
+          distance.mode('bicycling');
+          distance.matrix(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, function(err, distances){
             if (!err){
                 var timeResponse = new Travelcard(
                   'bicycling',
                   distances.rows[0].elements[0].duration.value,
                   formatTime(distances.rows[0].elements[0].duration.value),
                   distances.origin_addresses[0],
-                  70,
-                  40,
+                  originLocalStation.latitude,
+                  originLocalStation.longitude,
                   distances.destination_addresses[0],
-                  70,
-                  40
+                  destinationLocalStation.latitude,
+                  destinationLocalStation.longitude
                 )
 
                 tm.travelCards.push(timeResponse);
-                walk2.mode('walking');
-                walk2.matrix(destinationStation, destinations, function(err, distances){
+                distance.mode('walking');
+                distance.matrix(destinationLocalStationGoogleFormat, destinations, function(err, distances){
                   if (!err){
                       var timeResponse = new Travelcard(
                         'walking',
                         distances.rows[0].elements[0].duration.value,
                         formatTime(distances.rows[0].elements[0].duration.value),
                         distances.origin_addresses[0],
-                        70,
-                        40,
+                        destinationLocalStation.latitude,
+                        destinationLocalStation.longitude,
                         distances.destination_addresses[0],
-                        70,
-                        40
+                        end.lat,
+                        end.lng
                       )
 
                       tm.travelCards.push(timeResponse);
@@ -117,29 +126,7 @@ var citibikeTime = function(origins, originStation, destinations, destinationSta
         reject(err);
       }
     });
-    // distance.matrix(origins, destinations, function (err, distances) {
-    //     if (!err){
-    //         // console.log(distances.rows[0].elements);
-    //         console.log("Distances!:");
-    //         console.log(distances);
-    //         //constructor(type, time, timeString, startLoc, startLocLat, startLocLng, endLoc, endLocLat, endLocLng)
-    //         var timeResponse = new Travelcard(
-    //           mode,
-    //           distances.rows[0].elements[0].duration.value,
-    //           formatTime(distances.rows[0].elements[0].duration.value),
-    //           distances.origin_addresses[0],
-    //           70,
-    //           40,
-    //           distances.destination_addresses[0],
-    //           70,
-    //           40
-    //         )
-    //
-    //         resolve(timeResponse);
-    //     }else{
-    //       reject(err);
-    //     }
-    // });
+
   });
 }
 function formatTime(time){
