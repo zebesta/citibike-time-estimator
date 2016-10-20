@@ -76,6 +76,41 @@ app.get('/start/:start_address/end/:end_address', function(req,res) {
   // res.json(response);
 
 });
+//Get a geocoded version of the starting and ending addresses
+app.get('/start/:start_address', function(req,res) {
+  var start = req.params.start_address;
+  // var end = req.params.end_address;
+  console.log("Trying to get directions starting: " + start);
+  // console.log("Trying to get directions ending: " + end);
+  function initialize (start){
+    geo(start)
+      .then(results=>{
+        var startLatLng = results.json.results[0].geometry.location;
+        console.log("start location is: "+results.json.results[0].formatted_address);
+        console.log("Resolving the JSON in the promises!")
+        var toReturn = {
+          start: results.json.results[0].formatted_address,
+          end: null,
+          startLatLng: results.json.results[0].geometry.location,
+          endLatLng: null
+        }
+        res.json(toReturn);
+      })
+      .catch(errs =>{
+        console.log(" Error while resolving the JSON in the promises!")
+
+        console.log("ERROR!!!");
+        res.json(errs);
+      });
+
+  };
+  initialize (start);
+  // var response = {
+  //   hi: "hello"
+  // }
+  // res.json(response);
+
+});
 
 //Get the time and method requirements for the geocoded data being sent
 app.get('/calc/startll/:startll/endll/:endll', function(req,res){
