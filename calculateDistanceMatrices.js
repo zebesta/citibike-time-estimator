@@ -2,6 +2,7 @@ var time = require('./time').time;
 var citibikeTime = require('./time').citibikeTime;
 var findLocalStation = require('./find-local-station');
 var Travelcard = require ('./travelcard').Travelcard
+var getstations = require('./getstations')
 
 var Promise = require('promise');
 
@@ -11,10 +12,57 @@ var calculate = function(start, end){
     // var origins = ['' + start.lat + ', ' + start.lng];
     // var destinations = ['' + end.lat + ', ' + end.lng];
     // console.log("origins: " + origins);
+    getstations()
+      .then(res=>{
+        var stationList = res;
+        // console.log(stationList);
+        // Promise.all([findLocalStation(start, stationList), findLocalStation(end, stationList)])
+        var originLocalStation = findLocalStation(start, stationList);
+        console.log(originLocalStation);
+        var destinationLocalStation = findLocalStation(end, stationList);
+        console.log(destinationLocalStation);
+
+        console.log("Find local station promises!");
+        // console.log(res);
+        var citibikeTimePromises = [
+          //TODO these promises need to return more details objects instead of the number of seconds
+          time(start, end, 'walking'),
+          time(start, end, 'bicycling'),
+          time(start, end, 'driving'),
+          citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking')
+          // time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
+          // time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
+          // time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
+          // citibikeTime(origins, )
+        ]
+        Promise.all(citibikeTimePromises)
+          .then(results=>{
+
+            //TODO make this return an array of transmethods with properly nested travelcard arrays
+            var responseObject = results;
 
 
-    var originLocalStation  = findLocalStation(start);
-    var destinationLocalStation = findLocalStation(end);
+            console.log("Response object!:");
+            console.log(responseObject);
+
+            resolve(responseObject)
+          })
+          .catch(errs =>{
+            console.log("ERROR!!!");
+            reject(errs);
+          });
+
+
+
+      })
+      .catch(err=>{
+        return err;
+      });
+
+
+
+    // var originLocalStation  = findLocalStation(start);
+    // var destinationLocalStation = findLocalStation(end);
 
     // var originLocalStationGoogleFormat = [''+originLocalStation.latitude + ', '+ originLocalStation.longitude];
     // var destinationLocalStationGoogleFormat = [''+destinationLocalStation.latitude + ', '+ destinationLocalStation.longitude];
@@ -23,37 +71,10 @@ var calculate = function(start, end){
     // var allTimePromises = [];
     // var citibikeTransMethods = new Transmethod("Citibiking")
 
-    var citibikeTimePromises = [
-      //TODO these promises need to return more details objects instead of the number of seconds
-      time(start, end, 'walking'),
-      time(start, end, 'bicycling'),
-      time(start, end, 'driving'),
-      citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking')
-      // time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
-      // time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
-      // time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
-      // citibikeTime(origins, )
-    ]
-    Promise.all(citibikeTimePromises)
-      .then(results=>{
-
-        //TODO make this return an array of transmethods with properly nested travelcard arrays
-        var responseObject = results;
 
 
-        console.log("Response object!:");
-        console.log(responseObject);
-
-        resolve(responseObject)
-      })
-      .catch(errs =>{
-        console.log("ERROR!!!");
-        reject(errs);
-      });
 
   });
-
-
 }
 
 module.exports = calculate;

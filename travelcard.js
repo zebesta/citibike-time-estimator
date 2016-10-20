@@ -8,7 +8,9 @@ class Travelcard {
     this.startLocLng = startLocLng,
     this.endLoc = endLoc,
     this.endLocLat = endLocLat,
-    this.endLocLng = endLocLng
+    this.endLocLng = endLocLng,
+    this.bikes = 0;
+    this.docks = 0;
   };
 }
 

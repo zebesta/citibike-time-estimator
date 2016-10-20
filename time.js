@@ -20,12 +20,12 @@ var time = function(start, end, mode){
     distance.matrix(origins, destinations, function (err, distances) {
         if (!err){
             // console.log(distances.rows[0].elements);
-            console.log("Distances!:");
-            console.log(distances);
-            console.log("Origins!:")
-            console.log(origins);
-            console.log("Distances!:")
-            console.log(distances);
+            // console.log("Distances!:");
+            // console.log(distances);
+            // console.log("Origins!:")
+            // console.log(origins);
+            // console.log("Distances!:")
+            // console.log(distances);
             //constructor(type, time, timeString, startLoc, startLocLat, startLocLng, endLoc, endLocLat, endLocLng)
             var timeResponse = new Travelcard(
               mode,
@@ -39,8 +39,8 @@ var time = function(start, end, mode){
               end.lng
             );
             var tm = new Transmethod(stringMode, [timeResponse]);
-            console.log("PRINTING TM!!!");
-            console.log(tm);
+            // console.log("PRINTING TM!!!");
+            // console.log(tm);
             resolve(tm);
         }else{
           reject(err);
@@ -75,6 +75,9 @@ var citibikeTime = function(start, originLocalStation, end, destinationLocalStat
             originLocalStation.latitude,
             originLocalStation.longitude
           )
+          timeResponse.bikes = originLocalStation.availableBikes;
+          timeResponse.docks = originLocalStation.availableDocks;
+
           var tm = new Transmethod(stringMode, [timeResponse]);
           distance.mode('bicycling');
           distance.matrix(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, function(err, distances){
@@ -90,6 +93,8 @@ var citibikeTime = function(start, originLocalStation, end, destinationLocalStat
                   destinationLocalStation.latitude,
                   destinationLocalStation.longitude
                 )
+                timeResponse.bikes = originLocalStation.availableBikes;
+                timeResponse.docks = destinationLocalStation.availableDocks;
 
                 tm.travelCards.push(timeResponse);
                 distance.mode('walking');
@@ -106,6 +111,8 @@ var citibikeTime = function(start, originLocalStation, end, destinationLocalStat
                         end.lat,
                         end.lng
                       )
+                      timeResponse.bikes = destinationLocalStation.availableBikes;
+                      timeResponse.docks = destinationLocalStation.availableDocks;
 
                       tm.travelCards.push(timeResponse);
 
