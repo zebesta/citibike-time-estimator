@@ -24,18 +24,17 @@ var calculate = function(start, end){
 
         console.log("Find local station promises!");
         // console.log(res);
-        var citibikeTimePromises = [
+        var timePromises = [
           //TODO these promises need to return more details objects instead of the number of seconds
           time(start, end, 'walking'),
           time(start, end, 'bicycling'),
-          time(start, end, 'driving'),
-          citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking')
-          // time(origins, originLocalStationGoogleFormat, 'walking'), //walk from home to leonard
-          // time(originLocalStationGoogleFormat, destinationLocalStationGoogleFormat, 'bicycling'), //bike from leonard to howard
-          // time(destinationLocalStationGoogleFormat, destinations, 'walking') //walk from howard to recurse
-          // citibikeTime(origins, )
+          time(start, end, 'driving')
+          // citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking')
         ]
-        Promise.all(citibikeTimePromises)
+        if(originLocalStation && destinationLocalStation){
+          timePromises.push(citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking'));
+        }
+        Promise.all(timePromises)
           .then(results=>{
 
             //TODO make this return an array of transmethods with properly nested travelcard arrays

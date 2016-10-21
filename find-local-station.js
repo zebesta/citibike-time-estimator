@@ -5,6 +5,8 @@ var findLocalStation = function (latLng, stationList) {
 
 
   localStations = stationList.stationBeanList.filter(filterByProximity);
+  console.log("Printing local stations");
+  console.log(localStations);
   localStations.sort(function (a, b) {
     if (measure(a.latitude, a.longitude, latLng.lat, latLng.lng) > measure(b.latitude, b.longitude, latLng.lat, latLng.lng)) {
       return 1;
@@ -15,10 +17,16 @@ var findLocalStation = function (latLng, stationList) {
     return 0;
   });
 
-  var localStation = localStations[0];
-  console.log("LOCAL STATION IN FIND LOCAL STATION");
-  console.log(localStation)
-  return localStation;
+  if(localStations[0]){
+    //Will be TRUTHY for later checks
+    var localStation = localStations[0];
+    console.log("RETURNING LOCAL STATION!");
+    return localStation;
+  }else{
+    console.log("THERE IS NO LOCAL STATION");
+    //return something FALSY
+    return 0;
+  }
 
 
 
