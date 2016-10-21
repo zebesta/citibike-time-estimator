@@ -19,29 +19,26 @@ var time = function(start, end, mode){
     var destinations = ['' + end.lat + ', ' + end.lng];
     distance.matrix(origins, destinations, function (err, distances) {
         if (!err){
-            // console.log(distances.rows[0].elements);
-            // console.log("Distances!:");
-            // console.log(distances);
-            // console.log("Origins!:")
-            // console.log(origins);
-            // console.log("Distances!:")
-            // console.log(distances);
-            //constructor(type, time, timeString, startLoc, startLocLat, startLocLng, endLoc, endLocLat, endLocLng)
-            var timeResponse = new Travelcard(
-              mode,
-              distances.rows[0].elements[0].duration.value,
-              formatTime(distances.rows[0].elements[0].duration.value),
-              distances.origin_addresses[0],
-              start.lat,
-              start.lng,
-              distances.destination_addresses[0],
-              end.lat,
-              end.lng
-            );
-            var tm = new Transmethod(stringMode, [timeResponse]);
-            // console.log("PRINTING TM!!!");
-            // console.log(tm);
-            resolve(tm);
+          //ensure the response has atleast one object
+          console.log(distances.rows[0].elements[0].status != 'ZERO_RESULTS');
+            if(distances.rows[0].elements[0].status != 'ZERO_RESULTS'){
+              var timeResponse = new Travelcard(
+                mode,
+                distances.rows[0].elements[0].duration.value,
+                formatTime(distances.rows[0].elements[0].duration.value),
+                distances.origin_addresses[0],
+                start.lat,
+                start.lng,
+                distances.destination_addresses[0],
+                end.lat,
+                end.lng
+              );
+              var tm = new Transmethod(stringMode, [timeResponse]);
+              // console.log("PRINTING TM!!!");
+              // console.log(tm);
+              resolve(tm);
+
+            }else reject(err);
         }else{
           reject(err);
         }
