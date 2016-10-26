@@ -4,16 +4,13 @@ var googleMapsClient = require('@google/maps').createClient({
 var Promise = require('promise');
 
 
-
+//get a google geocoded address from the location string
 var geocode = function(addString){
-  // Geocode an address.
   return new Promise(function(resolve, reject){
     googleMapsClient.geocode({
       address: addString
     }, function(err, response) {
       if (!err) {
-        // console.log(response.json.results[0].geometry.location);
-        //return the reponse data
         resolve(response);
       }else{
         reject(err);

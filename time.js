@@ -19,8 +19,7 @@ var time = function(start, end, mode){
     var destinations = ['' + end.lat + ', ' + end.lng];
     distance.matrix(origins, destinations, function (err, distances) {
         if (!err){
-          //ensure the response has atleast one object
-          console.log(distances.rows[0].elements[0].status != 'ZERO_RESULTS');
+            //ensure the response has atleast one object
             if(distances.rows[0].elements[0].status != 'ZERO_RESULTS'){
               var timeResponse = new Travelcard(
                 mode,

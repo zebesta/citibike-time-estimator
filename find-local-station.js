@@ -1,12 +1,9 @@
-// var stations = require('./stations.json')
-// var getstations = require('./getstations')
-
 var findLocalStation = function (latLng, stationList) {
 
 
   localStations = stationList.stationBeanList.filter(filterByProximity);
-  console.log("Printing local stations");
-  console.log(localStations);
+  // console.log("Printing local stations");
+  // console.log(localStations);
   localStations.sort(function (a, b) {
     if (measure(a.latitude, a.longitude, latLng.lat, latLng.lng) > measure(b.latitude, b.longitude, latLng.lat, latLng.lng)) {
       return 1;

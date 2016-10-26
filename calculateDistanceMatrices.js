@@ -9,18 +9,15 @@ var Promise = require('promise');
 
 var calculate = function(start, end){
   return new Promise(function(resolve, reject){
-    // var origins = ['' + start.lat + ', ' + start.lng];
-    // var destinations = ['' + end.lat + ', ' + end.lng];
-    // console.log("origins: " + origins);
     getstations()
       .then(res=>{
         var stationList = res;
         // console.log(stationList);
         // Promise.all([findLocalStation(start, stationList), findLocalStation(end, stationList)])
         var originLocalStation = findLocalStation(start, stationList);
-        console.log(originLocalStation);
+        // console.log(originLocalStation);
         var destinationLocalStation = findLocalStation(end, stationList);
-        console.log(destinationLocalStation);
+        // console.log(destinationLocalStation);
 
         console.log("Find local station promises!");
         // console.log(res);
