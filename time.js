@@ -5,7 +5,7 @@ var Transmethod = require('./transmethod').Transmethod;
 // var testingthis = new Travelcard(12, "2", "70 Maujer", 73, -64.2, "455 Broadway", 72, -62);
 // console.log(testingthis.startLoc);
 
-distance.key('AIzaSyDmbMZu5BBQ9i3bH5ZJXXMeXnIiAmh9C9c');
+distance.key(process.env.DISTANCE_KEY);
 
 var Promise = require('promise');
 

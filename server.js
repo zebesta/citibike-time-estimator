@@ -46,7 +46,9 @@ app.get('/start/:start_address/end/:end_address', function(req,res) {
         console.log(" Error while resolving the JSON in the promises!")
 
         console.log("ERROR!!!");
-        res.json(errs[0]);
+        //this might send a server stack trace to the user as a JSON so that people could see all the internals
+        
+        res.json(errs);
       });
 
   };
