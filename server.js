@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 //hello world at room
 app.get('/', function(req, res) {
   var hello = {
-    hi: 'Hello World'
+    Aaron: 'Goldman'
   }
   res.json(hello);
 });
@@ -47,7 +47,7 @@ app.get('/start/:start_address/end/:end_address', function(req,res) {
 
         console.log("ERROR!!!");
         //this might send a server stack trace to the user as a JSON so that people could see all the internals
-        
+
         res.json(errs);
       });
 
