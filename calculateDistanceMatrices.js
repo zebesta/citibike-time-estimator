@@ -21,16 +21,14 @@ var calculate = function(start, end){
 
         console.log("Find local station promises!");
         // console.log(res);
-        var timePromises = [
-          //TODO these promises need to return more details objects instead of the number of seconds
-          time(start, end, 'walking'),
-          time(start, end, 'bicycling'),
-          time(start, end, 'driving')
-          // citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking')
-        ]
+        var timePromises = [];
         if(originLocalStation && destinationLocalStation){
           timePromises.push(citibikeTime(start, originLocalStation, end, destinationLocalStation, 'citibiking'));
         }
+        timePromises.push(time(start, end, 'walking'));
+        timePromises.push(time(start, end, 'bicycling'));,
+        timePromises.push(time(start, end, 'driving'));
+
         Promise.all(timePromises)
           .then(results=>{
 
